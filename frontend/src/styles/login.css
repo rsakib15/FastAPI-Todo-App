@@ -1,0 +1,5 @@
+.login-card-body,
+.singup-card-body{
+    padding: 36px !important;
+    text-align: left !important;
+}
