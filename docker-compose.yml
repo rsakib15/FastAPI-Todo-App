@@ -1,0 +1,35 @@
+services:
+  backend:
+    build: ./backend
+    container_name: fastapi_backend
+    restart: always
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    env_file:
+      - ./backend/.env
+
+  frontend:
+    build:
+      context: ./frontend # Path to your frontend Dockerfile
+    ports:
+      - "3000:80" # Expose frontend port
+    depends_on:
+      - backend # Ensures the backend service starts before the frontend
+
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: fastapi_user
+      POSTGRES_PASSWORD: password123
+      POSTGRES_DB: todo_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data # Persist data
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres_data: # Named volume for Postgres data
